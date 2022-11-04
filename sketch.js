@@ -3,6 +3,7 @@ let cam;
 let pg;
 let px = 4;
 let hsb = true;
+let isVideoLoaded = false;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -11,33 +12,39 @@ function setup() {
   vid.loop();
   vid.hide();
   noStroke();
-  
-  cam = createCapture(VIDEO);
+
+  cam = createCapture(VIDEO, callback);
   cam.hide();
   noStroke();
   colorMode(RGB, 255);
 }
+function callback() {
+  isVideoLoaded = true;
+}
 function draw() {
   background(46, 49, 179);
   // drawGradient();
-  vid.loadPixels();
-  cam.loadPixels();
-  translate(((width-vid.width)/2),((height-vid.height)/2));
-  
-  // code inspired by allison parrish https://creative-coding.decontextualize.com/video/
-  for (let y = 0; y < vid.height; y += px) {
-    for (let x = 0; x < vid.width; x += px) {
-      let offset = ((y*vid.width)+x)*4;
-      if (random() > 0.4) {
-        fill(vid.pixels[offset],
-          vid.pixels[offset+1],
-          vid.pixels[offset+2]);
-        rect(x, y, px, px); 
-      } else {
-        fill(cam.pixels[offset],
-            cam.pixels[offset+1],
-            cam.pixels[offset+2], 200);
-        rect(x,y,px,px);
+
+  if (isVideoLoaded) {
+    vid.loadPixels();
+    cam.loadPixels();
+    translate(((width-vid.width)/2),((height-vid.height)/2));
+
+    // code inspired by allison parrish https://creative-coding.decontextualize.com/video/
+    for (let y = 0; y < vid.height; y += px) {
+      for (let x = 0; x < vid.width; x += px) {
+        let offset = ((y*vid.width)+x)*4;
+        if (random() > 0.4) {
+          fill(vid.pixels[offset],
+              vid.pixels[offset+1],
+              vid.pixels[offset+2]);
+          rect(x, y, px, px);
+        } else {
+          fill(cam.pixels[offset],
+              cam.pixels[offset+1],
+              cam.pixels[offset+2], 200);
+          rect(x,y,px,px);
+        }
       }
     }
   }
@@ -49,7 +56,7 @@ function isCanvasCenter(x,y) {
   fill('red')
   rect(vy,vx,25,25);
   return (y > vy && y <= vy+vid.height) &&
-    (x > vx && x <= vx+vid.width);
+      (x > vx && x <= vx+vid.width);
 }
 
 function keyPressed() {
