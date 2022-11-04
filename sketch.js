@@ -6,8 +6,8 @@ let hsb = true;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  // vid = createVideo("waves_lite.mov");
-  vid = createVideo("https://imgur.com/YJfuwv6");
+  vid = createVideo("waves_express.mp4");
+  // vid = createVideo("https://imgur.com/YJfuwv6");
   vid.loop();
   vid.hide();
   noStroke();
